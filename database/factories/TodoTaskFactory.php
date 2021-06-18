@@ -22,7 +22,8 @@ class TodoTaskFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'label' => $this->faker->sentence(),
+            'is_complete' => $this->faker->boolean(),
         ];
     }
 }
