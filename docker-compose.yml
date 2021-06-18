@@ -1,0 +1,44 @@
+version: "3.1"
+services:
+
+    postgres:
+      image: postgres:11.1-alpine
+      container_name: postgres
+      working_dir: /app
+      volumes:
+        - .:/app
+      environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgre
+        - POSTGRES_DB=tododb
+      ports:
+        - "5432:5432"
+      networks:
+        todonew:
+          aliases: 
+            - "db.todoapp"
+
+    webserver:
+      image: nginx:alpine
+      container_name: webserver
+      working_dir: /app
+      volumes:
+          - .:/app
+          - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      ports:
+       - "8081:80"
+      networks:
+        todonew:
+
+    php-fpm:
+      build: docker/php-fpm
+      container_name: php-fpm
+      working_dir: /app
+      volumes:
+        - .:/app
+        - ./docker/php-fpm/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini
+      networks:
+        todonew:
+
+networks:
+  todonew:
